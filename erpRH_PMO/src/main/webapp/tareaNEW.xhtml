@@ -1,0 +1,192 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+
+    Copyright (c) 2018, 2021 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Distribution License v. 1.0, which is available at
+    http://www.eclipse.org/org/documents/edl-v10.php.
+
+    SPDX-License-Identifier: BSD-3-Clause
+
+-->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+    <h:head>
+    
+    <style type="text/css">
+        #contenedor{
+    	width 1000px
+    	}
+    	
+    	#cabecera{
+    	}
+    	
+    	#alta{
+    	float: left;
+    	width: 300px
+    	}
+    	
+    	#registro{
+    	float: left;
+    	width: 300px
+    	}
+    	
+    	#tabla{
+    	float: left;
+    	width: 400;
+    	}
+    	
+    	#pie{
+    	clear: both;
+    	}
+    	</style>
+    	
+        <title>Tarea</title>
+        
+    </h:head>
+    <h:body>
+    
+    <div id= "contenedor" >
+     <div id= "cabecera" >
+     
+     <h:graphicImage url="#{resource['images:duke.waving.gif']}" 
+                            alt="Registro de tarea"/>
+       <h:form>
+            <h:commandLink id="Index" value="Index" action="index" />
+        </h:form>
+        
+       </div>
+       
+       <div id= "alta">
+       <h:outputStylesheet name="css/stylesheet.css" target="head"/>
+       
+       <h:form prependId="false">
+            <h2>Alta de Tarea</h2>
+            <p>Bienvenido a la PMO de <i>DGTIC</i>!</p>
+            <p>
+                <label>Nombre:</label>
+                <br/>
+                <input type="text" jsf:id="nombre" name="nombre" 
+                       placeholder="Tarea" value="#{tarea.nombre}" 
+                       required="required" title="Introduzca el nombre de la Tarea."/>
+            </p>
+            <p>
+                <label>Descripción:</label>
+                <br/>
+                <input type="text" jsf:id="descripcion" name="descripcion" 
+                       placeholder="Descripción" value="#{tarea.descripcion}" 
+                       required="required" title="Describa brevemente la Tarea."/>
+            </p>
+            <p>
+                <label>Horas estimadas de duración:</label>
+                <br/>
+                <h:inputText id="horasEstimadas" p:type="number" 
+                             value="#{tarea.horasEstimadas}" 
+                             p:min="1" p:max="10000"
+                             p:step="1" p:required="required" 
+                             p:title="Indique cuántas horas requiere la tarea.">
+                    <f:ajax event="change" render="total" 
+                            listener="#{tarea.hirasEstimadas}"/>
+                </h:inputText>
+            </p>
+            <p>
+                <label>Área:</label>
+                <br/>
+                <input type="text" jsf:id="area" name="area" 
+                       placeholder="Estadística" value="#{tarea.area}" 
+                       required="required" title="Área."/>
+            </p>
+			<p>
+                <label>Estado:</label>
+                <br/>
+                <input type="text" jsf:id="estado" name="estado" 
+                       placeholder="Retrasada" value="#{tarea.estado}" 
+                       required="required" title="Estado."/>
+            </p>
+            <p>
+                <h:commandButton value="Confirme los datos" 
+                                 action="confirmationTar"/>
+                <input jsf:id="limpiar" name="limpiar" value="Limpiar" type="submit">
+                    <f:ajax render="@all" listener="#{tarea.limpiar}"/>
+                </input>
+            </p>
+            
+        </h:form>
+        </div>
+       
+       <div id= "registro">
+        <h:form>
+            <h2>Registro</h2>
+            <p></p>
+            <label>Nombre:</label>
+            <h:inputText id="nombre" value="#{tarea.nombre}" /><br/>
+            <label>Descripción:</label>
+            <h:inputText id="descripcion" value="#{tarea.descripcion}" /><br/>
+       		<label>Horas estimadas:</label>
+            <h:inputText id="horasEstimadas" value="#{tarea.horasEstimadas}" /><br/>
+            <label>Área:</label>
+            <h:inputText id="area" value="#{tarea.area}" /><br/>
+            <label>Estado:</label>
+            <h:inputText id="estado" value="#{tarea.estado}" /><br/>
+            
+            <h:commandButton id="agregar" value="Agregar">
+            	<f:ajax execute= "nombre descripcion horasEstimadas area estado" listener="#{tarea.agregar}" render="tareas"/>
+            </h:commandButton>
+        </h:form>
+        </div>
+        
+        <div id= "tabla">
+        <h:dataTable id="tareas"
+                         value="#{tarea.tareas}"
+                         var="tar"
+                         border="1"
+                         summary="Lista de tareas" >
+                <h:column>
+                    <f:facet name="header">
+                        Nombre
+                    </f:facet>
+                    <h:outputText value="#{tar.nombre}" />
+                </h:column>
+                <h:column>
+                    <f:facet name="header">
+                        Descripción
+                    </f:facet>
+                    <h:outputText value="#{tar.descripcion}" />
+                </h:column>
+                <h:column>
+                    <f:facet name="header">
+                        HorasEstimadas
+                    </f:facet>
+                    <h:outputText value="#{tar.horasEstimadas}" />
+                </h:column>
+                <h:column>
+                    <f:facet name="header">
+                        Área
+                    </f:facet>
+                    <h:outputText value="#{tar.area}" />
+                </h:column>
+                <h:column>
+                    <f:facet name="header">
+                        Estado
+                    </f:facet>
+                    <h:outputText value="#{tar.estado}" />
+                </h:column>
+            </h:dataTable>
+            
+        </div>
+        
+         <div id= "pie">
+       </div>
+       
+       </div>
+        
+    </h:body>
+</html>

@@ -1,0 +1,194 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+
+    Copyright (c) 2018, 2021 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Distribution License v. 1.0, which is available at
+    http://www.eclipse.org/org/documents/edl-v10.php.
+
+    SPDX-License-Identifier: BSD-3-Clause
+
+-->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+    <h:head>
+    
+    	<style type="text/css">
+        #contenedor{
+    	width 1000px
+    	}
+    	
+    	#cabecera{
+    	}
+    	
+    	#alta{
+    	float: left;
+    	width: 300px
+    	}
+    	
+    	#registro{
+    	float: left;
+    	width: 300px
+    	}
+    	
+    	#tabla{
+    	float: left;
+    	width: 400;
+    	}
+    	
+    	#pie{
+    	clear: both;
+    	}
+    	</style>
+    	
+        <title>Proyecto</title>
+        
+    </h:head>
+    <h:body>
+    
+    <div id= "contenedor" >
+     <div id= "cabecera" >
+     
+     <h:graphicImage url="#{resource['images:duke.waving.gif']}" 
+                            alt="Registro de proyecto"/>
+     <h:form>
+            <h:commandLink id="Index" value="Index" action="index" />
+        </h:form>
+        
+        </div>
+        
+        <div id= "alta">
+      	<h:outputStylesheet name="css/stylesheet.css" target="head"/>
+      
+      <h:form prependId="false">
+            <h2>Alta de Proyecto</h2>
+            <p>Bienvenido a la PMO de <i>DGTIC</i>!</p>
+            <p>
+                <label>Nombre:</label>
+                <br/>
+                <input type="text" jsf:id="nombre" name="nombre" 
+                       placeholder="Proyecto" value="#{proyecto.nombre}" 
+                       required="required" title="Introduzca el nombre del nuevo Proyecto."/>
+            </p>
+            <p>
+                <label>Descripción:</label>
+                <br/>
+                <input type="text" jsf:id="descripcion" name="descripcion" 
+                       placeholder="Descripción" value="#{proyecto.descripcion}" 
+                       required="required" title="Describa brevemente el Proyecto."/>
+            </p>
+            <p>
+                <label>Fecha de inicio:</label>
+                <br/>
+                <input type="date" jsf:id="fechaInicio" name="fechaInicio" 
+                       value="#{proyecto.fechaInicio}" required="required"
+                       title="Ingrese o elija una fecha."/>
+            </p>
+            <p>
+                <label>Días estimados de duración:</label>
+                <br/>
+                <h:inputText id="diasEstimados" p:type="number" 
+                             value="#{proyecto.diasEstimados}" 
+                             p:min="1" p:max="365"
+                             p:step="1" p:required="required" 
+                             p:title="Indique cuántos días durará el proyecto.">
+                    <f:ajax event="change" render="total" 
+                            listener="#{proyecto.diasEstimados}"/>
+                </h:inputText>
+            </p>
+            <p>
+                <label>Etapa:</label>
+                <br/>
+                <input type="text" jsf:id="etapa" name="etapa" 
+                       placeholder="Exploratoria" value="#{proyecto.etapa}" 
+                       required="required" title="Etapa."/>
+            </p>
+
+            <p>
+                <h:commandButton value="Confirme los datos" 
+                                 action="confirmationProy"/>
+                <input jsf:id="limpiar" name="limpiar" value="Limpiar" type="submit">
+                    <f:ajax render="@all" listener="#{proyecto.limpiar}"/>
+                </input>
+            </p>
+            
+        </h:form>
+        </div>
+      
+      <div id= "registro">
+        <h:form>
+            <h2>Registro</h2>
+            <p></p>
+            <label>Nombre:</label>
+            <h:inputText id="nombre" value="#{proyecto.nombre}" /><br/>
+            <label>Descripción:</label>
+            <h:inputText id="descripcion" value="#{proyecto.descripcion}" /><br/>
+            <label>Fecha de Inicio:</label>
+            <h:inputText id="fechaInicio" value="#{proyecto.fechaInicio}">	
+                 <f:convertDateTime pattern="dd/MM/yyyy" timeZone="EST" type="date" />
+             </h:inputText><br/>
+            <label>Días estimados:</label>
+            <h:inputText id="diasEstimados" value="#{proyecto.diasEstimados}" /><br/>
+            <label>Etapa:</label>
+            <h:inputText id="etapa" value="#{proyecto.etapa}" /><br/>
+            
+            <h:commandButton id="agregar" value="Agregar">
+            	<f:ajax execute= "nombre descripcion fechaInicio diasEstimados etapa" listener="#{proyecto.agregar}" render="proyectos"/>
+            </h:commandButton>
+        </h:form>
+        </div>
+        
+        <div id= "tabla">
+        <h:dataTable id="proyectos"
+                         value="#{proyecto.proyectos}"
+                         var="proy"
+                         border="1"
+                         summary="Lista de Proyectos" >
+                <h:column>
+                    <f:facet name="header">
+                        Nombre
+                    </f:facet>
+                    <h:outputText value="#{proy.nombre}" />
+                </h:column>
+                <h:column>
+                    <f:facet name="header">
+                        Descripción
+                    </f:facet>
+                    <h:outputText value="#{proy.descripcion}" />
+                </h:column>
+                <h:column>
+                    <f:facet name="header">
+                        Fecha de inicio
+                    </f:facet>
+                    <h:outputText value="#{proy.fechaInicio}">
+                    	<f:convertDateTime pattern="dd/MM/yyyy" timeZone="EST" type="date" />
+                    </h:outputText>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">
+                        Días estimados
+                    </f:facet>
+                    <h:outputText value="#{proy.diasEstimados}" />
+                </h:column>
+                <h:column>
+                    <f:facet name="header">
+                        Etapa
+                    </f:facet>
+                    <h:outputText value="#{proy.etapa}" />
+                </h:column>
+            </h:dataTable>
+            
+        </div>
+        
+        </div>
+        
+    </h:body>
+</html>

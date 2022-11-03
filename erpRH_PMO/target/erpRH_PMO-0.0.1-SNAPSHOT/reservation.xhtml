@@ -1,0 +1,126 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+
+    Copyright (c) 2014, 2019 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Distribution License v. 1.0, which is available at
+    http://www.eclipse.org/org/documents/edl-v10.php.
+
+    SPDX-License-Identifier: BSD-3-Clause
+
+-->
+
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+    <h:head>
+    </h:head>
+    <h:body>
+        <h:outputStylesheet name="css/stylesheet.css" target="head"/>
+
+        <h:form prependId="false">
+            <h2>Alta de candidato</h2>
+            <p>Bienvenido a la PMO de <i>DGTIC</i>!</p>
+            <p>
+                <label>Nombre:</label>
+                <br/>
+                <input type="text" jsf:id="nombre" name="nombre" 
+                       placeholder="John" value="#{candidato.nombre}" 
+                       required="required" title="Introduzca su nombre."/>
+            </p>
+            <p>
+                <label>Apellido:</label>
+                <br/>
+                <input type="text" jsf:id="apellido" name="apellido" 
+                       placeholder="Doe" value="#{candidato.apellido}" 
+                       required="required" title="Ingtroduzca su apellido."/>
+            </p>
+            <p>
+                <label>Correo:</label>
+                <br/>
+                <input type="email" jsf:id="correo" name="correo" 
+                       value="#{candidato.correo}" required="required"
+                       title="Ingrese su correo electrónico."/>
+            </p>
+            <p>
+                <label>Ingrese el correo nuevamente:</label>
+                <br/>
+                <input type="email" jsf:id="correoOtraVez" name="correoOtraVez" 
+                       value="#{candidato.correoOtraVez}" required="required" 
+                       title="Introduzca nuevamente su correo electrónico." oninput="check(this)"/>
+            </p>
+            <p>
+                <label>Horas totales disponibles para la colaboración:</label>
+                <br/>
+                <h:inputText id="horasDisponiblesTotales" value="#{candidato.horasDisponiblesTotales}">
+                    <f:passThroughAttributes name="" value="#{candidato.persona}"/>
+                    <f:ajax event="change" render="total" 
+                            listener="#{candidato.calculateTotal}"/>
+                </h:inputText>
+            </p>
+            <p>
+                <label>Horas permitidas de colaboración:</label>
+                <br/>
+                <h:inputText id="horasPermitidas" p:type="number" 
+                             value="#{candidato.horasPermitidas}" 
+                             p:min="1" p:max="20"
+                             p:step="2" p:required="required" 
+                             p:title="Indique las horas de colaboración permitidas por su Área: 5, 10, 15, o 20.">
+                    <f:ajax event="change" render="total" 
+                            listener="#{candidato.calculateTotal}"/>
+                </h:inputText>
+            </p>
+            <p>
+                <label>Horas de colaboración en el Proyecto:</label>
+                <br/>
+                <output jsf:id="horasProyecto" name="horasProyecto">
+                    #{candidato.horasProyecto}
+                </output>
+            </p>
+            <p>
+                <label>Experiencia en años:</label>
+                <br/>
+                <h:inputText id="experienciaEnAnios" p:type="number" 
+                             value="#{candidato.experienciaEnAnios}" 
+                             p:min="1" p:max="50"
+                             p:step="1" p:required="required" 
+                             p:title="Indique los años de experiencia en el área.">
+                    <f:ajax event="change" render="total" 
+                            listener="#{candidato.experienciaEnAnios}"/>
+                </h:inputText>
+            </p>
+            <p>
+                <label>Teléfono de contacto:</label>
+                <br/>
+                <input type="text" jsf:id="telefono" name="telefono" 
+                       placeholder="5555" value="#{candidato.telefono}" 
+                       required="required" title="Teléfono."/>
+            </p>
+
+            <p>
+                <h:commandButton value="Confirme su propuesta" 
+                                 action="confirmation"/>
+                <input jsf:id="clear" name="clear" value="Clear" type="submit">
+                    <f:ajax render="@all" listener="#{candidato.clear}"/>
+                </input>
+            </p>
+        </h:form>
+
+        <script>
+            function check(input) {
+                if (input.value !== document.getElementById('email').value) {
+                    input.setCustomValidity('Los dos correos electrónicos deben coincidir..');
+                } else {
+                    // input is valid -- reset the error message
+                    input.setCustomValidity('');
+                }
+            }
+        </script>
+    </h:body>
+</html>

@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+
+    Copyright (c) 2014, 2019 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Distribution License v. 1.0, which is available at
+    http://www.eclipse.org/org/documents/edl-v10.php.
+
+    SPDX-License-Identifier: BSD-3-Clause
+
+-->
+
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+    <h:head>
+    </h:head>
+    <h:body>
+        <h:outputStylesheet name="css/stylesheet.css" target="head"/>
+
+        <h:form>
+            <h2>Confirmación de propuesta</h2>
+            <p>
+                <output jsf:id="confirm" name="confirm"> 
+                    Gracias por su propuesta de colaboración, #{candidato.nombre}. 
+Cuenta con #{candidato.horasPermitidas} horas de su tiempo. 
+Contamos con #{candidato.horasProyecto} horas de su tiempo para el Proyecto. 
+Lo contactactaremos a su correo: #{candidato.correo} o a su teléfono: #{candidato.telefono}.
+                </output>
+            </p>
+            <p>
+                <h:commandButton value="Regresar" action="candidatoNEW"/>
+            </p>
+        </h:form>
+    </h:body>
+</html>

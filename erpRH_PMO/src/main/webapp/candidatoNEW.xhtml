@@ -1,0 +1,247 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+
+    Copyright (c) 2018, 2021 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Distribution License v. 1.0, which is available at
+    http://www.eclipse.org/org/documents/edl-v10.php.
+
+    SPDX-License-Identifier: BSD-3-Clause
+
+-->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+    <h:head>
+        
+        <style type="text/css">
+        #contenedor{
+    	width 1000px
+    	}
+    	
+    	#cabecera{
+    	}
+    	
+    	#alta{
+    	float: left;
+    	width: 300px
+    	}
+    	
+    	#registro{
+    	float: left;
+    	width: 300px
+    	}
+    	
+    	#tabla{
+    	float: left;
+    	width: 400;
+    	}
+    	
+    	#pie{
+    	clear: both;
+    	}
+    	</style>
+    	
+    	<title>Candidato</title>
+    	
+    </h:head> 
+    <h:body>
+    
+    <div id= "contenedor" >
+     <div id= "cabecera" >
+    
+
+    <h:graphicImage url="#{resource['images:duke.waving.gif']}" 
+                            alt="Registro de candidato"/>
+      <h:form>
+            <h:commandLink id="Index" value="Index" action="index" />
+        </h:form>
+        
+      </div>
+      
+      <div id= "alta">
+      <h:outputStylesheet name="css/stylesheet.css" target="head"/>
+
+        <h:form prependId="false">
+            <h2>Alta de candidato</h2>
+            <p>Bienvenido a la PMO de <i>DGTIC</i>!</p>
+            <p>
+                <label>Nombre:</label>
+                <br/>
+                <input type="text" jsf:id="nombre" name="nombre" 
+                       placeholder="John" value="#{candidato.nombre}" 
+                       required="required" title="Introduzca su nombre."/>
+            </p>
+            <p>
+                <label>Apellido:</label>
+                <br/>
+                <input type="text" jsf:id="apellido" name="apellido" 
+                       placeholder="Doe" value="#{candidato.apellido}" 
+                       required="required" title="Ingtroduzca su apellido."/>
+            </p>
+            <p>
+                <label>Correo:</label>
+                <br/>
+                <input type="correo" jsf:id="correo" name="correo" 
+                       value="#{candidato.correo}" required="required"
+                       title="Ingrese su correo electrónico."/>
+            </p>
+            <p>
+                <label>Ingrese el correo nuevamente:</label>
+                <br/>
+                <input type="correo" jsf:id="correoOtraVez" name="correoOtraVez" 
+                       value="#{candidato.correoOtraVez}" required="required" 
+                       title="Introduzca nuevamente su correo electrónico." oninput="check(this)"/>
+            </p>
+            <p>
+                <label>Horas totales disponibles para la colaboración:</label>
+                <br/>
+                <h:inputText id="horasDisponiblesTotales" value="#{candidato.horasDisponiblesTotales}">
+                    <f:passThroughAttributes name="" value="#{candidato.persona}"/>
+                    <f:ajax event="change" render="total" 
+                            listener="#{candidato.calculateTotal}"/>
+                </h:inputText>
+            </p>
+            <p>
+                <label>Horas permitidas de colaboración:</label>
+                <br/>
+                <h:inputText id="horasPermitidas" p:type="number" 
+                             value="#{candidato.horasPermitidas}" 
+                             p:min="1" p:max="20"
+                             p:step="2" p:required="required" 
+                             p:title="Indique las horas de colaboración permitidas por su Área: 5, 10, 15, o 20.">
+                    <f:ajax event="change" render="total" 
+                            listener="#{candidato.calculateTotal}"/>
+                </h:inputText>
+            </p>
+            <p>
+                <label>Horas de colaboración en el Proyecto:</label>
+                <br/>
+                <output jsf:id="horasProyecto" name="horasProyecto">
+                    #{candidato.horasProyecto}
+                </output>
+            </p>
+            <p>
+                <label>Experiencia en años:</label>
+                <br/>
+                <h:inputText id="experienciaEnAnios" p:type="number" 
+                             value="#{candidato.experienciaEnAnios}" 
+                             p:min="1" p:max="50"
+                             p:step="1" p:required="required" 
+                             p:title="Indique los años de experiencia en el área.">
+                    <f:ajax event="change" render="total" 
+                            listener="#{candidato.experienciaEnAnios}"/>
+                </h:inputText>
+            </p>
+            <p>
+                <label>Teléfono de contacto:</label>
+                <br/>
+                <input type="text" jsf:id="telefono" name="telefono" 
+                       placeholder="5555" value="#{candidato.telefono}" 
+                       required="required" title="Teléfono."/>
+            </p>
+
+            <p>
+                <h:commandButton value="Confirme su propuesta" 
+                                 action="confirmationCand"/>
+                <input jsf:id="limpiar" name="limpiar" value="Limpiar" type="submit">
+                    <f:ajax render="@all" listener="#{candidato.limpiar}"/>
+                </input>
+            </p>
+            
+        </h:form>
+		<script>
+            function check(input) {
+                if (input.value !== document.getElementById('correo').value) {
+                    input.setCustomValidity('Los dos correos electrónicos deben coincidir..');
+                } else {
+                    // input is valid -- reset the error message
+                    input.setCustomValidity('');
+                }
+            }
+        </script>
+        
+      </div>
+      
+      <div id= "registro">
+        <h:form>
+            <p></p>
+            <label>Nombre:</label>
+            <h:inputText id="nombre" value="#{candidato.nombre}" /><br/>
+            <label>Apellido:</label>
+            <h:inputText id="apellido" value="#{candidato.apellido}" /><br/>
+            <label>Teléfono:</label>
+            <h:inputText id="telefono" value="#{candidato.telefono}" /><br/>
+            <label>Correo:</label>
+            <h:inputText id="correo" value="#{candidato.correo}" /><br/>
+            <label>Años de experiencia:</label>
+            <h:inputText id="experienciaEnAnios" value="#{candidato.experienciaEnAnios}" /><br/>
+            <label>Horas disponibles:</label>
+            <h:inputText id="horasDisponiblesTotales" value="#{candidato.horasDisponiblesTotales}" /><br/>
+            
+            <h:commandButton id="agregar" value="Agregar">
+            	<f:ajax execute= "nombre apellido correo telefono experienciaEnAnios horasDisponiblesTotales" listener="#{candidato.agregar}" render="candidatos"/>
+            </h:commandButton>
+        </h:form>
+        </div>
+        
+        <div id= "tabla">
+        <h:dataTable id="candidatos"
+                         value="#{candidato.candidatos}"
+                         var="candidat"
+                         border="1"
+                         summary="Lista de Candidatos" >
+                <h:column>
+                    <f:facet name="header">
+                        Nombre
+                    </f:facet>
+                    <h:outputText value="#{candidat.nombre}" />
+                </h:column>
+                <h:column>
+                    <f:facet name="header">
+                        Apellido
+                    </f:facet>
+                    <h:outputText value="#{candidat.apellido}" />
+                </h:column>
+                <h:column>
+                    <f:facet name="header">
+                        Correo
+                    </f:facet>
+                    <h:outputText value="#{candidat.correo}" />
+                </h:column>
+                <h:column>
+                    <f:facet name="header">
+                        Telefono
+                    </f:facet>
+                    <h:outputText value="#{candidat.telefono}" />
+                </h:column>
+                <h:column>
+                    <f:facet name="header">
+                        Años de experiencia
+                    </f:facet>
+                    <h:outputText value="#{candidat.experienciaEnAnios}" />
+                </h:column>
+                <h:column>
+                    <f:facet name="header">
+                        Horas dispoibles
+                    </f:facet>
+                    <h:outputText value="#{candidat.horasDisponiblesTotales}" />
+                </h:column>
+            </h:dataTable>
+            
+        </div>
+       
+       <div id= "pie">
+       </div>
+       
+       </div>
+        
+    </h:body>
+</html>
